@@ -1,38 +1,28 @@
 @echo off
-setlocal enabledelayedexpansion
-
-:: 1. Thong tin cau hinh
-set REPO_URL=https://github.com/LVKhoaGH/Zabbix_Grafana.git
-set BRANCH_NAME=main
-
-:: 2. Di chuyen den thu muc du an
+:: Di chuyển đến thư mục dự án
 cd /d "D:\Projects\Zabbix_Grafana"
 
-:: 3. Khoi tao hoac ket noi Git
-if not exist ".git" (
-    echo [INFO] Khoi tao Repository...
-    git init
-    git remote add origin %REPO_URL%
-    git branch -M %BRANCH_NAME%
-)
+echo [INFO] Dang kiem tra va dong bo du lieu tu GitHub...
+:: Lay du lieu moi nhat tu server ve de tranh xung dot
+git pull origin main --allow-unrelated-histories
 
-:: 4. Thiet lap xac thuc (Credential Helper)
-git config --global credential.helper store
-
-:: 5. Commit va Push
-echo [INFO] Dang them file...
+echo [INFO] Dang chuan bi cac thay doi...
+:: Them toan bo file vao stage
 git add .
+
+:: Tao commit voi thoi gian hien tai
 set datetime=%date:~-4%-%date:~3,2%-%date:~0,2%_%time:~0,2%-%time:~3,2%
 set datetime=%datetime: =0%
 git commit -m "Update: %datetime%"
 
 echo [INFO] Dang day code len GitHub...
-git push -u origin %BRANCH_NAME%
+:: Push len repository
+git push -u origin main
 
 if %errorlevel% neq 0 (
-    echo [ERROR] Push that bai! Kiem tra ket noi mang hoac Token cua ban.
-    pause
+    echo [ERROR] Qua trinh push gap loi! Vui long kiem tra lai ket noi hoac Token.
 ) else (
-    echo [SUCCESS] Da cap nhat du lieu thanh cong!
+    echo [SUCCESS] Da cap nhat du lieu len GitHub thanh cong.
 )
+
 pause
